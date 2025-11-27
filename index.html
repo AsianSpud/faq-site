@@ -1,89 +1,229 @@
-<!-- Updated AXAPTA FAQ HTML (Company logo + home removed, full-width forced for Google Sites) -->
 <!doctype html>
 <html lang="en">
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
 <title>AXAPTA Invoice FAQs</title>
+
 <style>
-  /* Force full width in Google Sites iframe */
   html, body {
-    width: 100% !important;
     margin: 0 !important;
     padding: 0 !important;
+    width: 100% !important;
+    height: 100%;
     overflow-x: hidden !important;
+    font-family: system-ui, -apple-system, "Segoe UI", Arial, sans-serif;
     background: #fffaf9;
-    font-family: Inter, Arial, sans-serif;
+  }
+  *, *::before, *::after {
+    box-sizing: border-box;
   }
 
-  :root{
+  :root {
     --bg: #fffaf9;
     --card: #ffffff;
     --text: #111827;
     --muted: #6b7280;
-    --accent: #8b0000;
-    --accent-2: #b22222;
-    --border: #e6e6e6;
-    --radius: 12px;
-    --shadow: 0 6px 20px rgba(11,15,20,0.08);
+    --accent: #8b0000;   /* maroon */
+    --border: #e5e7eb;
+    --shadow: 0 6px 20px rgba(0,0,0,0.08);
   }
-  .dark{
+  .dark {
     --bg: #0b0f12;
     --card: #0f1720;
-    --text: #e6eef6;
+    --text: #e5eef6;
     --muted: #9aa7b8;
-    --accent: #b22222;
-    --accent-2: #8b0000;
-    --border: rgba(255,255,255,0.06);
-    --shadow: 0 8px 30px rgba(0,0,0,0.6);
+    --border: rgba(148,163,184,0.4);
+    --shadow: 0 10px 30px rgba(0,0,0,0.6);
   }
 
-  .layout{
-    display:flex;gap:28px;padding:28px;width:100%;max-width:100%;
-    background:var(--bg);
+  .layout {
+    display: flex;
+    gap: 24px;
+    padding: 24px;
+    background: var(--bg);
+    width: 100%;
+    max-width: 100%;
   }
 
-  .sidebar{
-    width:300px;flex:0 0 300px;background:var(--card);
-    border-radius:var(--radius);padding:22px;box-shadow:var(--shadow);
-    border:1px solid var(--border);position:sticky;top:24px;height:max-content;
+  .sidebar {
+    width: 280px;
+    flex: 0 0 280px;
+    background: var(--card);
+    border-radius: 12px;
+    border: 1px solid var(--border);
+    padding: 16px;
+    box-shadow: var(--shadow);
+    position: sticky;
+    top: 16px;
+    align-self: flex-start;
+  }
+  .sidebar h2 {
+    margin: 0 0 4px;
+    font-size: 16px;
+    color: var(--accent);
+  }
+  .sidebar p {
+    margin: 0 0 12px;
+    font-size: 12px;
+    color: var(--muted);
+  }
+  .search-box {
+    margin-bottom: 10px;
+  }
+  .search-box input {
+    width: 100%;
+    padding: 10px 12px;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    font-size: 13px;
+    outline: none;
+    background: transparent;
+    color: var(--text);
+  }
+  .search-box input::placeholder {
+    color: var(--muted);
+  }
+  .topics {
+    max-height: 60vh;
+    overflow-y: auto;
+    padding-right: 4px;
+  }
+  .topics a {
+    display: block;
+    padding: 8px 9px;
+    margin-bottom: 6px;
+    font-size: 13px;
+    font-weight: 600;
+    text-decoration: none;
+    color: var(--accent);
+    border-radius: 8px;
+    border: 1px solid transparent;
+  }
+  .topics a:hover {
+    background: rgba(139,0,0,0.06);
+    border-color: rgba(139,0,0,0.16);
   }
 
-  .search input{
-    width:100%;padding:12px 14px;border-radius:10px;border:1px solid var(--border);
-    background:transparent;color:var(--text);
+  .main {
+    flex: 1 1 auto;
+    min-width: 0;
+  }
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 14px;
+    margin-bottom: 14px;
+  }
+  .header-title h1 {
+    margin: 0;
+    font-size: 20px;
+    color: var(--accent);
+  }
+  .header-title p {
+    margin: 4px 0 0;
+    font-size: 13px;
+    color: var(--muted);
+  }
+  .header-actions {
+    display: flex;
+    gap: 10px;
+  }
+  .btn {
+    border-radius: 999px;
+    padding: 8px 14px;
+    border: none;
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .btn-accent {
+    background: linear-gradient(90deg,var(--accent),#b22222);
+    color: #fff;
+    box-shadow: 0 6px 18px rgba(139,0,0,0.23);
   }
 
-  .topics a{
-    display:block;padding:10px 12px;margin-bottom:8px;
-    text-decoration:none;color:var(--accent);font-weight:700;
-    border-radius:8px;
+  .faq-wrap {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 14px;
+  }
+  .card {
+    background: var(--card);
+    border-radius: 12px;
+    border: 1px solid var(--border);
+    box-shadow: var(--shadow);
+    padding: 14px 16px 10px;
+  }
+  .card-header {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    cursor: pointer;
+  }
+  .card-header h3 {
+    margin: 0;
+    font-size: 15px;
+    color: var(--accent);
+  }
+  .card-summary {
+    margin: 6px 0 0;
+    font-size: 13px;
+    color: var(--muted);
+  }
+  .chev {
+    margin-left: auto;
+    font-size: 14px;
+    color: var(--muted);
+  }
+  .card.open .chev {
+    transform: rotate(90deg);
+  }
+  .answer {
+    display: none;
+    margin-top: 8px;
+    font-size: 13px;
+    color: var(--text);
+    line-height: 1.5;
+  }
+  .answer p {
+    margin: 4px 0;
+  }
+  .card.open .answer {
+    display: block;
   }
 
-  .main{flex:1;width:100%;max-width:100%;}
-
-  .toggle{
-    background:linear-gradient(90deg,var(--accent),var(--accent-2));color:#fff;
-    padding:8px 12px;border-radius:999px;border:none;font-weight:700;cursor:pointer;
+  #topBtn {
+    position: fixed;
+    right: 20px;
+    bottom: 20px;
+    padding: 10px 14px;
+    border-radius: 999px;
+    border: none;
+    font-size: 13px;
+    font-weight: 600;
+    background: var(--accent);
+    color: #fff;
+    cursor: pointer;
+    display: none;
+    box-shadow: 0 10px 28px rgba(0,0,0,0.35);
+    z-index: 50;
   }
 
-  .faq-wrap{display:grid;grid-template-columns:1fr;gap:16px;width:100%;}
-
-  .card{
-    background:var(--card);border-radius:12px;padding:18px;border:1px solid var(--border);
-    box-shadow:var(--shadow);
-  }
-
-  .q{display:flex;align-items:flex-start;gap:12px;cursor:pointer;}
-  .q h3{margin:0;font-size:16px;color:var(--accent)}
-  .meta-line{font-size:13px;color:var(--muted);}
-  .answer{margin-top:12px;display:none;line-height:1.55;color:var(--text)}
-  .open .answer{display:block}
-
-  #topBtn{
-    position:fixed;right:28px;bottom:28px;background:var(--accent);color:#fff;
-    border:none;padding:12px 14px;border-radius:999px;cursor:pointer;
-    display:none;font-weight:700;
+  @media (max-width: 900px) {
+    .layout {
+      flex-direction: column;
+      padding: 16px;
+    }
+    .sidebar {
+      width: 100%;
+      position: relative;
+      top: auto;
+    }
   }
 </style>
 </head>
@@ -91,12 +231,25 @@
 
 <div class="layout">
   <aside class="sidebar">
-    <div class="search"><input id="search" type="search" placeholder="Search FAQ..."></div>
-    <nav class="topics"></nav>
+    <h2>AXAPTA FAQs</h2>
+    <p>Invoice processing • IM-OCR • Posting errors</p>
+    <div class="search-box">
+      <input id="search" type="search" placeholder="Search question or keyword...">
+    </div>
+    <nav class="topics" aria-label="FAQ topics"></nav>
   </aside>
 
   <main class="main">
-    <button id="darkToggle" class="toggle">🌙 Dark Mode</button>
+    <div class="header">
+      <div class="header-title">
+        <h1>AXAPTA Invoice Processing – FAQ</h1>
+        <p>Quick reference guide for common AX invoice and interface issues.</p>
+      </div>
+      <div class="header-actions">
+        <button id="darkToggle" class="btn btn-accent">🌙 Dark Mode</button>
+      </div>
+    </div>
+
     <section id="faqs" class="faq-wrap"></section>
   </main>
 </div>
@@ -104,7 +257,7 @@
 <button id="topBtn">↑ Top</button>
 
 <script>
-/* ------------------ FULL FAQ DATA (from AX FAQs.docx) ------------------ */
+/* ------------------ FULL FAQ DATA (with image on Q1) ------------------ */
 const faqs = [
   {
     id: "q-where-validated",
@@ -113,11 +266,11 @@ const faqs = [
       "Invoices that are successfully exported from IM-OCR will interface into AX through the following journals:",
       "• Invoice Journal for non-PO invoices",
       "• Invoice Approval Journal for PO invoices",
-      "<img src='https://drive.google.com/file/d/1Sz_7F74xmWccFIcenjUNsJUK9PcRURsb' style='width:100%;max-width:520px;border-radius:10px;margin:12px 0;box-shadow:0 4px 16px rgba(0,0,0,0.25);'>"
+      "<img src='https://drive.google.com/uc?export=view&id=1Sz_7F74xmWccFIcenjUNsJUK9PcRURsb' style='width:100%;max-width:520px;border-radius:10px;margin:12px 0;box-shadow:0 4px 16px rgba(0,0,0,0.25);'>"
     ]
   },
   {
-    id: "q-restore-cancelled",
+    id: "q-restore-canceled",
     q: "What should I do if I accidentally cancelled an invoice in the Invoice Approval Journal?",
     a: [
       "To restore the invoice:",
@@ -254,96 +407,110 @@ const faqs = [
   }
 ];
 
+/* ------------------ RENDER FAQ + TOPICS ------------------ */
+const topicsEl = document.querySelector(".topics");
+const faqsEl = document.getElementById("faqs");
 
-/* ------------------ RENDER FAQ + SEARCH + ACCORDION ------------------ */
-const topicsEl = document.querySelector('.topics');
-const faqsEl = document.getElementById('faqs');
+function renderFaqs() {
+  topicsEl.innerHTML = "";
+  faqsEl.innerHTML = "";
 
-function renderAll(){
-  topicsEl.innerHTML = '';
-  faqsEl.innerHTML = '';
-
-  faqs.forEach(item=>{
-    const link = document.createElement('a');
-    link.href = '#' + item.id;
+  faqs.forEach(item => {
+    // sidebar link
+    const link = document.createElement("a");
+    link.href = "#" + item.id;
     link.textContent = item.q;
-    link.onclick = e => {
+    link.addEventListener("click", e => {
       e.preventDefault();
-      document.getElementById(item.id).scrollIntoView({behavior:'smooth'});
-    };
+      const target = document.getElementById(item.id);
+      if (target) target.scrollIntoView({ behavior: "smooth", block: "start" });
+    });
     topicsEl.appendChild(link);
 
-    const card = document.createElement('article');
-    card.className = 'card';
+    // card
+    const card = document.createElement("article");
+    card.className = "card";
     card.id = item.id;
 
-    const qWrap = document.createElement('div');
-    qWrap.className = 'q';
+    const head = document.createElement("div");
+    head.className = "card-header";
 
-    const h = document.createElement('h3');
-    h.textContent = item.q;
-    qWrap.appendChild(h);
+    const h3 = document.createElement("h3");
+    h3.textContent = item.q;
 
-    const summary = document.createElement('p');
-    summary.className = 'meta-line';
+    const chev = document.createElement("div");
+    chev.className = "chev";
+    chev.textContent = "›";
+
+    head.appendChild(h3);
+    head.appendChild(chev);
+
+    const summary = document.createElement("p");
+    summary.className = "card-summary";
     summary.textContent = item.a[0];
 
-    const ans = document.createElement('div');
-    ans.className = 'answer';
-    item.a.forEach(t=>{
-      const p = document.createElement('p'); p.textContent = t; ans.appendChild(p);
-      p.innerHTML = line;     // ✅ dito gumagana ang <img>, <b>, etc.
-  ans.appendChild(p);
+    const ans = document.createElement("div");
+    ans.className = "answer";
+    item.a.forEach(line => {
+      const p = document.createElement("p");
+      p.innerHTML = line;   // IMPORTANT: allows <img> and formatting
+      ans.appendChild(p);
     });
 
-    card.appendChild(qWrap);
+    head.addEventListener("click", () => {
+      card.classList.toggle("open");
+    });
+
+    card.appendChild(head);
     card.appendChild(summary);
     card.appendChild(ans);
-
-    card.addEventListener('click',()=>{
-      card.classList.toggle('open');
-    });
-
     faqsEl.appendChild(card);
   });
 }
-renderAll();
+renderFaqs();
 
 /* ------------------ SEARCH ------------------ */
-document.getElementById('search').addEventListener('input', function(){
-  let term = this.value.toLowerCase();
-  document.querySelectorAll('.card').forEach(c=>{
-    const text = c.innerText.toLowerCase();
-    c.style.display = text.includes(term) ? '' : 'none';
+const searchInput = document.getElementById("search");
+searchInput.addEventListener("input", function () {
+  const term = this.value.toLowerCase();
+
+  document.querySelectorAll(".card").forEach(card => {
+    const text = card.innerText.toLowerCase();
+    card.style.display = text.includes(term) ? "" : "none";
   });
-  document.querySelectorAll('.topics a').forEach(a=>{
-    a.style.display = a.innerText.toLowerCase().includes(term) ? '' : 'none';
+
+  document.querySelectorAll(".topics a").forEach(link => {
+    const text = link.innerText.toLowerCase();
+    link.display = text.includes(term) ? "" : "none";
+    link.style.display = text.includes(term) ? "" : "none";
   });
 });
 
-/*/* ------------------ DARK MODE ------------------ */
-const darkToggle = document.getElementById('darkToggle');
-function applyDark(d){
-  if(d) document.body.classList.add('dark'); else document.body.classList.remove('dark');
-  darkToggle.textContent = d ? '☀️ Light Mode' : '🌙 Dark Mode';
+/* ------------------ DARK MODE ------------------ */
+const darkToggle = document.getElementById("darkToggle");
+function setDark(on) {
+  if (on) {
+    document.body.classList.add("dark");
+    darkToggle.textContent = "☀️ Light Mode";
+  } else {
+    document.body.classList.remove("dark");
+    darkToggle.textContent = "🌙 Dark Mode";
+  }
 }
-applyDark(false);
-
-darkToggle.addEventListener('click',()=>{
-  const isDark = document.body.classList.toggle('dark');
-  darkToggle.textContent = isDark ? '☀️ Light Mode' : '🌙 Dark Mode';
+setDark(false);
+darkToggle.addEventListener("click", () => {
+  const isDark = !document.body.classList.contains("dark");
+  setDark(isDark);
 });
 
 /* ------------------ BACK TO TOP ------------------ */
-const topBtn = document.getElementById('topBtn');
-window.addEventListener('scroll',()=>{
-  topBtn.style.display = window.scrollY > 300 ? 'block' : 'none';
+const topBtn = document.getElementById("topBtn");
+window.addEventListener("scroll", () => {
+  topBtn.style.display = window.scrollY > 300 ? "block" : "none";
 });
-topBtn.onclick = ()=>window.scrollTo({top:0,behavior:'smooth'});
-
-</script> ------------------ */
-const darkToggle = document.getElementById('darkToggle');
-function applyDark(d){
-  if(d) document.body.classList.add('dark'); else document.body
+topBtn.addEventListener("click", () => {
+  window.scrollTo({ top: 0, behavior: "smooth" });
+});
+</script>
 </body>
 </html>
