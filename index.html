@@ -1,104 +1,133 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>FAQ - Smooth Scroll (Iframe Compatible)</title>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>FAQ – Sophos Home</title>
 
-  <style>
-    html {
-      scroll-behavior: smooth;
-    }
-    body {
-      font-family: Arial, sans-serif;
-      max-width: 900px;
-      margin: 40px auto;
-      line-height: 1.6;
-      padding: 0 20px;
-    }
-    h1 {
-      text-align: center;
-      margin-bottom: 30px;
-    }
-    ul {
-      padding-left: 20px;
-    }
-    ul li {
-      margin-bottom: 12px;
-    }
-    ul li a {
-      text-decoration: none;
-      color: #1d4ed8;
-      font-weight: bold;
-    }
-    ul li a:hover {
-      text-decoration: underline;
-    }
-    section {
-      margin-top: 55px;
-      padding-top: 25px;
-      border-top: 1px solid #ccc;
-    }
-  </style>
+<style>
+  :root {
+    --accent: #2563eb;     /* Blue accent */
+    --bg: #f4f6f9;          /* Light background */
+    --card-bg: #ffffff;     /* White card */
+    --text: #1f2937;        /* Dark gray text */
+  }
+
+  body {
+    font-family: "Segoe UI", Arial, sans-serif;
+    background: var(--bg);
+    margin: 0;
+    padding: 0;
+    color: var(--text);
+  }
+
+  .container {
+    max-width: 900px;
+    margin: 40px auto;
+    padding: 0 20px 100px;
+  }
+
+  h1 {
+    text-align: center;
+    margin-bottom: 30px;
+    font-size: 32px;
+    font-weight: 700;
+  }
+
+  /* FAQ List */
+  .faq-list {
+    background: var(--card-bg);
+    padding: 25px;
+    border-radius: 12px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+    margin-bottom: 35px;
+  }
+
+  .faq-list li {
+    margin-bottom: 12px;
+  }
+
+  .faq-list a {
+    text-decoration: none;
+    color: var(--accent);
+    font-weight: 600;
+    font-size: 17px;
+  }
+
+  .faq-list a:hover {
+    text-decoration: underline;
+  }
+
+  /* Card-style FAQ answers */
+  section {
+    background: var(--card-bg);
+    padding: 25px 25px 20px;
+    border-radius: 12px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+    margin-bottom: 35px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  /* Left colored accent bar */
+  section::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 6px;
+    height: 100%;
+    background: var(--accent);
+    border-radius: 12px 0 0 12px;
+  }
+
+  h2 {
+    margin-top: 0;
+    margin-bottom: 12px;
+    font-size: 24px;
+    font-weight: 700;
+  }
+
+  p {
+    font-size: 16px;
+    margin-bottom: 10px;
+  }
+
+  /* Back to top button */
+  #topBtn {
+    position: fixed;
+    bottom: 25px;
+    right: 25px;
+    background: var(--accent);
+    color: white;
+    padding: 14px 18px;
+    border: none;
+    border-radius: 50px;
+    cursor: pointer;
+    font-size: 15px;
+    font-weight: bold;
+    box-shadow: 0 6px 15px rgba(0,0,0,0.25);
+    display: none;
+    transition: 0.3s;
+  }
+
+  #topBtn:hover {
+    background: #1d4ed8;
+  }
+</style>
 </head>
+
 <body>
+
+<div class="container">
 
   <h1>General FAQ – Sophos Home</h1>
 
-  <ul>
+  <ul class="faq-list">
     <li><a href="#q1">What is Sophos Home?</a></li>
-    <li><a href="#q2">What is the difference between Trial and Premium?</a></li>
-    <li><a href="#q3">What type of security measures does Sophos Home provide?</a></li>
-    <li><a href="#q4">Can I use Sophos Home along other antivirus software?</a></li>
+    <li><a href="#q2">Difference between Trial and Premium</a></li>
+    <li><a href="#q3">What security measures does it provide?</a></li>
+    <li><a href="#q4">Can I use it with other antivirus?</a></li>
   </ul>
 
   <section id="q1">
-    <h2>What is Sophos Home?</h2>
-    <p>Sophos Home delivers enterprise-level security for home PCs and Macs, providing protection against ransomware, malware, and hacking attempts.</p>
-  </section>
-
-  <section id="q2">
-    <h2>What is the difference between Trial and Premium?</h2>
-    <p><strong>Premium:</strong> Real-time protection, remote management, 10 devices max.</p>
-    <p><strong>Trial:</strong> Same features, but 30 days only + 3 devices.</p>
-  </section>
-
-  <section id="q3">
-    <h2>What type of security measures does Sophos Home provide?</h2>
-    <p>Includes AI detection, behavior analysis, web scanning, phishing protection.</p>
-  </section>
-
-  <section id="q4">
-    <h2>Can I use Sophos Home along other antivirus software?</h2>
-    <p>Not recommended. It may cause conflicts and reduce security.</p>
-  </section>
-
-  <!-- JavaScript Fix: Smooth Scroll inside iframe -->
-  <script>
-    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-      anchor.addEventListener('click', function(event) {
-        event.preventDefault();
-        const id = this.getAttribute("href").substring(1);
-        const target = document.getElementById(id);
-        if (target) {
-          target.scrollIntoView({ behavior: "smooth" });
-        }
-      });
-    });
-
-    // Support for URL with hash (ex: index.html#q2 inside iframe)
-    window.addEventListener("load", () => {
-      const hash = window.location.hash;
-      if (hash) {
-        const target = document.querySelector(hash);
-        if (target) {
-          setTimeout(() => {
-            target.scrollIntoView({ behavior: "smooth" });
-          }, 300);
-        }
-      }
-    });
-  </script>
-
-</body>
-</html>
