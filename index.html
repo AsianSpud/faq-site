@@ -147,4 +147,140 @@ section:hover {
 }
 
 /* -------------------------
-     BACK TO
+     BACK TO TOP BUTTON
+------------------------- */
+#topBtn {
+  position: fixed;
+  bottom: 25px;
+  right: 25px;
+  background: var(--accent);
+  color: white;
+  border: none;
+  padding: 14px 18px;
+  border-radius: 50px;
+  cursor: pointer;
+  font-size: 15px;
+  font-weight: bold;
+  box-shadow: 0 6px 15px rgba(0,0,0,0.25);
+  display: none;
+}
+</style>
+</head>
+
+<body>
+
+<!-- DARK MODE BUTTON -->
+<div class="dark-toggle" onclick="toggleDark()">🌙 Dark Mode</div>
+
+<!-- SIDEBAR -->
+<div class="sidebar">
+  <h2>FAQ Topics</h2>
+
+  <input type="text" id="search" placeholder="Search FAQ...">
+
+  <a href="#q1">What is Sophos Home?</a>
+  <a href="#q2">Difference between Trial and Premium</a>
+  <a href="#q3">Security measures</a>
+  <a href="#q4">Using with other antivirus</a>
+</div>
+
+<!-- MAIN CONTENT -->
+<div class="main">
+
+  <h1 class="fade">General FAQ – Sophos Home</h1>
+
+  <section id="q1" class="fade">
+    <h2>What is Sophos Home?</h2>
+    <div class="answer">
+      <p>Sophos Home delivers enterprise-level protection against malware, ransomware, and hacking attempts.</p>
+    </div>
+  </section>
+
+  <section id="q2" class="fade">
+    <h2>Difference between Trial and Premium</h2>
+    <div class="answer">
+      <p><strong>Premium:</strong> Real-time protection, remote management, up to 10 devices.</p>
+      <p><strong>Trial:</strong> Same features, but limited to 30 days and 3 devices.</p>
+    </div>
+  </section>
+
+  <section id="q3" class="fade">
+    <h2>What security measures does it provide?</h2>
+    <div class="answer">
+      <p>AI detection, behavioral analysis, phishing defense, exploit prevention, and web scanning.</p>
+    </div>
+  </section>
+
+  <section id="q4" class="fade">
+    <h2>Can I use it with other antivirus?</h2>
+    <div class="answer">
+      <p>No. Running two antiviruses can conflict and weaken protection.</p>
+    </div>
+  </section>
+
+</div>
+
+<button id="topBtn">↑ Top</button>
+
+<script>
+/* -----------------------------------
+      SMOOTH SCROLL (iframe works)
+----------------------------------- */
+document.querySelectorAll('a[href^="#"]').forEach(link => {
+  link.onclick = e => {
+    e.preventDefault();
+    let id = link.getAttribute("href").substring(1);
+    document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
+  };
+});
+
+/* -----------------------------------
+          ACCORDION FAQ
+----------------------------------- */
+document.querySelectorAll("section").forEach(sec => {
+  sec.addEventListener("click", () => {
+    let ans = sec.querySelector(".answer");
+    ans.style.display = ans.style.display === "block" ? "none" : "block";
+  });
+});
+
+/* -----------------------------------
+          DARK MODE
+----------------------------------- */
+function toggleDark() {
+  document.body.classList.toggle("dark");
+}
+
+/* -----------------------------------
+       SCROLL TO ANCHOR ON LOAD
+----------------------------------- */
+window.onload = () => {
+  if (location.hash) {
+    let el = document.querySelector(location.hash);
+    if (el) setTimeout(() => el.scrollIntoView({ behavior: "smooth" }), 300);
+  }
+};
+
+/* -----------------------------------
+        BACK TO TOP BUTTON
+----------------------------------- */
+let btn = document.getElementById("topBtn");
+window.onscroll = () => {
+  btn.style.display = window.scrollY > 250 ? "block" : "none";
+};
+btn.onclick = () => window.scrollTo({ top: 0, behavior: "smooth" });
+
+/* -----------------------------------
+            SEARCH BAR
+----------------------------------- */
+document.getElementById("search").addEventListener("input", function() {
+  let term = this.value.toLowerCase();
+  document.querySelectorAll("section").forEach(sec => {
+    let text = sec.innerText.toLowerCase();
+    sec.style.display = text.includes(term) ? "block" : "none";
+  });
+});
+</script>
+
+</body>
+</html>
