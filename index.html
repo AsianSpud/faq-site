@@ -3,8 +3,12 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>FAQ - Smooth Scroll Example</title>
+  <title>FAQ - Smooth Scroll (Iframe Compatible)</title>
+
   <style>
+    html {
+      scroll-behavior: smooth;
+    }
     body {
       font-family: Arial, sans-serif;
       max-width: 900px;
@@ -17,27 +21,23 @@
       margin-bottom: 30px;
     }
     ul {
-      list-style-type: disc;
       padding-left: 20px;
     }
     ul li {
-      margin-bottom: 10px;
+      margin-bottom: 12px;
     }
     ul li a {
       text-decoration: none;
-      color: #2a5db0;
-      cursor: pointer;
+      color: #1d4ed8;
+      font-weight: bold;
     }
     ul li a:hover {
       text-decoration: underline;
     }
     section {
-      margin-top: 50px;
-      padding-top: 30px;
+      margin-top: 55px;
+      padding-top: 25px;
       border-top: 1px solid #ccc;
-    }
-    section h2 {
-      color: #1a1a1a;
     }
   </style>
 </head>
@@ -54,24 +54,51 @@
 
   <section id="q1">
     <h2>What is Sophos Home?</h2>
-    <p>Sophos Home delivers enterprise-level security for home PCs and Macs, providing protection against ransomware, malware, and hacking attempts. It works for both Windows and Mac systems.</p>
+    <p>Sophos Home delivers enterprise-level security for home PCs and Macs, providing protection against ransomware, malware, and hacking attempts.</p>
   </section>
 
   <section id="q2">
     <h2>What is the difference between Trial and Premium?</h2>
-    <p><strong>Sophos Home Premium</strong> provides full real-time protection, web filtering, and remote management for up to 10 devices.</p>
-    <p><strong>Sophos Home Trial</strong> includes the same features but is limited to 30 days and 3 devices.</p>
+    <p><strong>Premium:</strong> Real-time protection, remote management, 10 devices max.</p>
+    <p><strong>Trial:</strong> Same features, but 30 days only + 3 devices.</p>
   </section>
 
   <section id="q3">
     <h2>What type of security measures does Sophos Home provide?</h2>
-    <p>It uses AI/machine learning, behavioral analysis, signature-based detection, phishing protection, and web scanning to stop malicious threats and compromised websites.</p>
+    <p>Includes AI detection, behavior analysis, web scanning, phishing protection.</p>
   </section>
 
   <section id="q4">
     <h2>Can I use Sophos Home along other antivirus software?</h2>
-    <p>It is not recommended to run two antiviruses at the same time because they conflict and reduce security.</p>
+    <p>Not recommended. It may cause conflicts and reduce security.</p>
   </section>
+
+  <!-- JavaScript Fix: Smooth Scroll inside iframe -->
+  <script>
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+      anchor.addEventListener('click', function(event) {
+        event.preventDefault();
+        const id = this.getAttribute("href").substring(1);
+        const target = document.getElementById(id);
+        if (target) {
+          target.scrollIntoView({ behavior: "smooth" });
+        }
+      });
+    });
+
+    // Support for URL with hash (ex: index.html#q2 inside iframe)
+    window.addEventListener("load", () => {
+      const hash = window.location.hash;
+      if (hash) {
+        const target = document.querySelector(hash);
+        if (target) {
+          setTimeout(() => {
+            target.scrollIntoView({ behavior: "smooth" });
+          }, 300);
+        }
+      }
+    });
+  </script>
 
 </body>
 </html>
