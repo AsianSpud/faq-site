@@ -292,6 +292,8 @@ function renderAll(){
     ans.className = 'answer';
     item.a.forEach(t=>{
       const p = document.createElement('p'); p.textContent = t; ans.appendChild(p);
+      p.innerHTML = line;     // ✅ dito gumagana ang <img>, <b>, etc.
+  ans.appendChild(p);
     });
 
     card.appendChild(qWrap);
