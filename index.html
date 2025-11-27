@@ -178,4 +178,310 @@
   .card.open .answer { display: block; }
 
   .answer img {
-    width: 100%
+    width: 100%;
+    max-width: 520px;
+    border-radius: 10px;
+    margin: 12px 0;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.25);
+    display: block;
+  }
+
+  #topBtn {
+    position: fixed;
+    right: 20px;
+    bottom: 20px;
+    padding: 10px 14px;
+    border-radius: 999px;
+    border: none;
+    font-size: 13px;
+    font-weight: 600;
+    background: var(--accent);
+    color: #fff;
+    cursor: pointer;
+    display: none;
+    box-shadow: 0 10px 28px rgba(0,0,0,0.35);
+    z-index: 50;
+  }
+
+  @media (max-width: 900px) {
+    .layout { flex-direction: column; padding: 16px; }
+    .sidebar { width: 100%; position: relative; top: auto; }
+  }
+</style>
+</head>
+<body>
+
+<div class="layout">
+  <aside class="sidebar">
+    <h2>AXAPTA FAQs</h2>
+    <p>Invoice processing • IM-OCR • Posting errors</p>
+    <div class="search-box">
+      <input id="search" type="search" placeholder="Search question or keyword...">
+    </div>
+    <nav class="topics" aria-label="FAQ topics"></nav>
+  </aside>
+
+  <main class="main">
+    <div class="header">
+      <div class="header-title">
+        <h1>AXAPTA Invoice Processing – FAQ</h1>
+        <p>Quick reference guide for common AX invoice and interface issues.</p>
+      </div>
+      <div class="header-actions">
+        <button id="darkToggle" class="btn btn-accent">🌙 Dark Mode</button>
+      </div>
+    </div>
+
+    <section id="faqs" class="faq-wrap"></section>
+  </main>
+</div>
+
+<button id="topBtn">↑ Top</button>
+
+<script>
+const faqs = [
+  {
+    id: "q-where-validated",
+    q: "Where are validated invoices routed once they have been successfully exported from IM-OCR to AX?",
+    a: [
+      "Invoices that are successfully exported from IM-OCR will interface into AX through the following journals:",
+      "• Invoice Journal for non-PO invoices",
+      "• Invoice Approval Journal for PO invoices",
+      "<img src='https://drive.google.com/uc?export=view&id=1Sz_7F74xmWccFIcenjUNsJUK9PcRURsb' alt='IM-OCR to AX routing screenshot'>"
+    ]
+  },
+  {
+    id: "q-restore-canceled",
+    q: "What should I do if I accidentally cancelled an invoice in the Invoice Approval Journal?",
+    a: [
+      "To restore the invoice:",
+      "1. Open the Invoice Approval Journal.",
+      "2. Select the invoice cancelled.",
+      "3. Click Lines then Remove voucher.",
+      "4. Confirm by selecting Yes.",
+      "5. Fetch voucher.",
+      "6. Click Select then OK to complete the process."
+    ]
+  },
+  {
+    id: "q-insufficient-info",
+    q: "What does the error message \"Insufficient information / Intercompany posting missing / Update canceled\" mean in AX?",
+    a: [
+      "This error appears when AX is unable to post an invoice due to missing or incorrect data in the voucher. The Infolog may show messages such as:",
+      "\"Insufficient information in a line in voucher ...\" – Required fields (e.g., ledger account, offset account, or financial dimensions) are missing.",
+      "\"Intercompany posting with th91 missing.\" – The intercompany setup is incomplete or a required dimension value (e.g., th91) is not defined or mapped correctly.",
+      "\"Journal has not been posted / Update has been canceled because of an error.\" – AX stops the posting process because validation failed.",
+      "To resolve these errors, ensure all mandatory fields and dimensions are populated. Check intercompany account mappings and required dimensions for the referenced value and correct any missing or invalid data. If the issue persists, please seek assistance from the AX support team."
+    ]
+  },
+  {
+    id: "q-no-budget",
+    q: "To whom should I coordinate if a \"no budget\" error occurs during invoice posting?",
+    a: [
+      "Coordinate with the Requestors or Marketing Coordinators so they can top up the budget. Once the budget has been updated, you can proceed to post the invoice."
+    ]
+  },
+  {
+    id: "q-invoice-higher-than-grn",
+    q: "How do I handle an invoice in AX when the invoice amount is higher than the PO GRN amount?",
+    a: [
+      "Ask the requestor to create an additional Purchase Order (PO) for the excess amount. Once the additional PO number is provided, follow these steps:",
+      "1. Go to the Invoice Approval Journal in AX.",
+      "2. Select Functions → Purchase Order.",
+      "3. Click the Select tab.",
+      "4. Tick the additional PO number.",
+      "5. Arrange the sequence as needed.",
+      "You can now post the invoice successfully."
+    ]
+  },
+  {
+    id: "q-inventitemprice",
+    q: "What does the error \"Cannot create a record in Price (InventItemPrice). Item Number RBMENSYMVN006.\" mean in AX?",
+    a: [
+      "This error indicates that AX is unable to create or update a price record for the specified item (RBMENSYMVN006) in the InventItemPrice table. Common causes include:",
+      "• The item number does not exist or is inactive in the system.",
+      "• Required pricing setup (such as price groups or units of measure) is missing or incorrect.",
+      "• Insufficient user permissions to create or modify price records.",
+      "To resolve this error, raise this to the AX support team as the finance team does not have sufficient access to investigate the item setup."
+    ]
+  },
+  {
+    id: "q-ledger-incorrect",
+    q: "The ledger account tagged in the PO is incorrect; how can I correct it during invoice posting?",
+    a: [
+      "To correct the ledger account during invoice posting:",
+      "1. Go to the Invoice Approval Journal in AX.",
+      "2. Click Lines and select the invoice to post.",
+      "3. Navigate to the Information tab.",
+      "4. For Opex accounts, enter the correct ledger account in the Ledger Account field.",
+      "5. For A&M, enter the correct ledger account in the Category field."
+    ]
+  },
+  {
+    id: "q-po-dimension-mismatch",
+    q: "What should I do if the PO dimension does not match the project master in AX?",
+    a: [
+      "If the dimensions set in the PO do not match the project master, requestors should:",
+      "• Verify the project dimensions in the project master.",
+      "• Update the PO line with the correct project or financial dimensions to match the project master.",
+      "• Ensure that all required fields (Cost Center, Department, Project ID, etc.) are consistent.",
+      "If the mismatch persists, raise the issue to the AX support team for assistance, as correcting project dimension setups may require administrative access."
+    ]
+  },
+  {
+    id: "q-not-in-journal",
+    q: "Where can I find an invoice exported from IM-OCR to AX if it does not appear in the Invoice Journal or Invoice Approval Journal?",
+    a: [
+      "If an invoice exported from IM-OCR does not appear in the Invoice Journal or Invoice Approval Journal, it may not have been successfully interfaced into AX. To locate it:",
+      "• Check the Invoice Processing Log in AX to see the current status of the invoice.",
+      "  – AP Invoice Processing Log - for Non-PO invoices.",
+      "  – PO Invoice Processing Log - for PO invoices.",
+      "• Created – The invoice has been generated but not yet posted.",
+      "• Failed – There was an error during the interface process.",
+      "If the status shows Failed, identify the error details in the log and correct any missing or invalid information. Once the issue is resolved, the invoice can be re-processed.",
+      "If the invoice still cannot be found, contact the AX support team for assistance."
+    ]
+  },
+  {
+    id: "q-closed-period",
+    q: "What should I do if the invoice cannot be posted in AX due to a closed period?",
+    a: [
+      "If the invoice cannot be posted because the period is closed:",
+      "1. Check the posting date used for the invoice in AX.",
+      "2. Update the posting date to a date within an open period.",
+      "3. Attempt to post the invoice again after updating the date."
+    ]
+  },
+  {
+    id: "q-po-number-invalid",
+    q: "How do I resolve the AX interface error \"Line Item 1.00 – PO Number NPOXX-00XXX is invalid\"?",
+    a: [
+      "This error appears when the PO number captured in IM-OCR does not match a valid PO in AX. To resolve it:",
+      "• Verify the PO number in the invoice and ensure it matches exactly with the PO created in AX.",
+      "• Confirm that the PO exists in AX, is open, and has not been cancelled.",
+      "If the PO number is correct but still returns an \"invalid\" error, the issue may be due to incorrect PO setup or missing data in AX. In such cases, escalate the issue to the AX support team, as system-side corrections may be required.",
+      "To prevent this interface error in AX, the item number in IM-OCR has to be updated manually."
+    ]
+  },
+  {
+    id: "q-dimension-error",
+    q: "How do I resolve a dimension error such as \"Business Line/PRIN-PROD combination failing financial dimension\" in AX?",
+    a: [
+      "This error occurs when the financial dimensions used in the PO line do not match a valid or allowed dimension combination in AX. To resolve it:",
+      "1. Check the financial dimensions (e.g., Business Line, PRIN, Product, Cost Center) assigned to the line.",
+      "2. Verify whether the dimension combination is valid based on the defined dimension rules.",
+      "3. Update the dimension in the AX PO module with the correct combination.",
+      "4. Re-process the invoice from the Invoice Processing Log."
+    ]
+  },
+  {
+    id: "q-material-invalid",
+    q: "How do I resolve the AX interface error \"Material Number is invalid\"?",
+    a: [
+      "To resolve this:",
+      "• Verify the material/item number on the invoice and ensure it is correctly encoded in IM-OCR.",
+      "• Check if the item number exists and is active in AX.",
+      "• If the material number should be valid but still returns an error, the item master setup may be incomplete.",
+      "During invoice validation, if you are unsure of the material number, leave the field blank to avoid this error.",
+      "As the Finance team does not have access to modify item master data, raise this issue to the AX support team for validation and correction."
+    ]
+  }
+];
+
+const topicsEl = document.querySelector(".topics");
+const faqsEl = document.getElementById("faqs");
+
+function renderFaqs() {
+  topicsEl.innerHTML = "";
+  faqsEl.innerHTML = "";
+  faqs.forEach(item => {
+    const link = document.createElement("a");
+    link.href = "#" + item.id;
+    link.textContent = item.q;
+    link.addEventListener("click", e => {
+      e.preventDefault();
+      const target = document.getElementById(item.id);
+      if (target) target.scrollIntoView({ behavior: "smooth", block: "start" });
+    });
+    topicsEl.appendChild(link);
+
+    const card = document.createElement("article");
+    card.className = "card";
+    card.id = item.id;
+
+    const head = document.createElement("div");
+    head.className = "card-header";
+
+    const h3 = document.createElement("h3");
+    h3.textContent = item.q;
+
+    const chev = document.createElement("div");
+    chev.className = "chev";
+    chev.textContent = "›";
+
+    head.appendChild(h3);
+    head.appendChild(chev);
+
+    const summary = document.createElement("p");
+    summary.className = "card-summary";
+    summary.textContent = item.a[0];
+
+    const ans = document.createElement("div");
+    ans.className = "answer";
+    item.a.forEach(line => {
+      const p = document.createElement("p");
+      p.innerHTML = line;
+      ans.appendChild(p);
+    });
+
+    head.addEventListener("click", () => {
+      card.classList.toggle("open");
+    });
+
+    card.appendChild(head);
+    card.appendChild(summary);
+    card.appendChild(ans);
+    faqsEl.appendChild(card);
+  });
+}
+renderFaqs();
+
+const searchInput = document.getElementById("search");
+searchInput.addEventListener("input", function () {
+  const term = this.value.toLowerCase();
+  document.querySelectorAll(".card").forEach(card => {
+    const text = card.innerText.toLowerCase();
+    card.style.display = text.includes(term) ? "" : "none";
+  });
+  document.querySelectorAll(".topics a").forEach(link => {
+    const text = link.innerText.toLowerCase();
+    link.style.display = text.includes(term) ? "" : "none";
+  });
+});
+
+const darkToggle = document.getElementById("darkToggle");
+function setDark(on) {
+  if (on) {
+    document.body.classList.add("dark");
+    darkToggle.textContent = "☀️ Light Mode";
+  } else {
+    document.body.classList.remove("dark");
+    darkToggle.textContent = "🌙 Dark Mode";
+  }
+}
+setDark(false);
+darkToggle.addEventListener("click", () => {
+  const isDark = !document.body.classList.contains("dark");
+  setDark(isDark);
+});
+
+const topBtn = document.getElementById("topBtn");
+window.addEventListener("scroll", () => {
+  topBtn.style.display = window.scrollY > 300 ? "block" : "none";
+});
+topBtn.addEventListener("click", () => {
+  window.scrollTo({ top: 0, behavior: "smooth" });
+});
+</script>
+</body>
+</html>
