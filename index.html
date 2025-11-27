@@ -4,18 +4,17 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
 <title>AXAPTA Invoice FAQs</title>
-
 <style>
   html, body {
     margin: 0;
     padding: 0;
     width: 100%;
+    height: 100%;
+    overflow-x: hidden;
     font-family: system-ui, -apple-system, "Segoe UI", Arial, sans-serif;
     background: #fffaf9;
   }
-  *, *::before, *::after {
-    box-sizing: border-box;
-  }
+  *, *::before, *::after { box-sizing: border-box; }
 
   :root {
     --bg: #fffaf9;
@@ -26,339 +25,157 @@
     --border: #e5e7eb;
     --shadow: 0 6px 20px rgba(0,0,0,0.08);
   }
-
-  .page {
-    max-width: 1080px;
-    margin: 24px auto;
-    padding: 0 16px;
+  .dark {
+    --bg: #0b0f12;
+    --card: #0f1720;
+    --text: #e5eef6;
+    --muted: #9aa7b8;
+    --border: rgba(148,163,184,0.4);
+    --shadow: 0 10px 30px rgba(0,0,0,0.6);
   }
 
-  .header {
-    margin-bottom: 18px;
+  .layout {
+    display: flex;
+    gap: 24px;
+    padding: 24px;
+    background: var(--bg);
+    width: 100%;
   }
-  .header h1 {
-    margin: 0;
-    font-size: 22px;
+
+  .sidebar {
+    width: 280px;
+    flex: 0 0 280px;
+    background: var(--card);
+    border-radius: 12px;
+    border: 1px solid var(--border);
+    padding: 16px;
+    box-shadow: var(--shadow);
+    position: sticky;
+    top: 16px;
+    align-self: flex-start;
+  }
+  .sidebar h2 {
+    margin: 0 0 4px;
+    font-size: 16px;
     color: var(--accent);
   }
-  .header p {
+  .sidebar p {
+    margin: 0 0 12px;
+    font-size: 12px;
+    color: var(--muted);
+  }
+  .search-box { margin-bottom: 10px; }
+  .search-box input {
+    width: 100%;
+    padding: 10px 12px;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    font-size: 13px;
+    outline: none;
+    background: transparent;
+    color: var(--text);
+  }
+  .search-box input::placeholder { color: var(--muted); }
+  .topics {
+    max-height: 60vh;
+    overflow-y: auto;
+    padding-right: 4px;
+  }
+  .topics a {
+    display: block;
+    padding: 8px 9px;
+    margin-bottom: 6px;
+    font-size: 13px;
+    font-weight: 600;
+    text-decoration: none;
+    color: var(--accent);
+    border-radius: 8px;
+    border: 1px solid transparent;
+  }
+  .topics a:hover {
+    background: rgba(139,0,0,0.06);
+    border-color: rgba(139,0,0,0.16);
+  }
+
+  .main { flex: 1 1 auto; min-width: 0; }
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 14px;
+    margin-bottom: 14px;
+  }
+  .header-title h1 {
+    margin: 0;
+    font-size: 20px;
+    color: var(--accent);
+  }
+  .header-title p {
     margin: 4px 0 0;
     font-size: 13px;
     color: var(--muted);
   }
-
-  .faq-list {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 12px;
+  .header-actions { display: flex; gap: 10px; }
+  .btn {
+    border-radius: 999px;
+    padding: 8px 14px;
+    border: none;
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .btn-accent {
+    background: linear-gradient(90deg,var(--accent),#b22222);
+    color: #fff;
+    box-shadow: 0 6px 18px rgba(139,0,0,0.23);
   }
 
-  details.faq {
+  .faq-wrap {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 14px;
+  }
+  .card {
     background: var(--card);
     border-radius: 12px;
     border: 1px solid var(--border);
     box-shadow: var(--shadow);
-    padding: 10px 14px 10px;
+    padding: 14px 16px 10px;
   }
-
-  details.faq[open] {
-    border-color: rgba(139,0,0,0.35);
-  }
-
-  summary {
-    list-style: none;
-    cursor: pointer;
+  .card-header {
     display: flex;
     align-items: flex-start;
-    gap: 8px;
+    gap: 10px;
+    cursor: pointer;
   }
-  summary::-webkit-details-marker {
-    display: none;
-  }
-
-  .q-title {
-    font-size: 15px;
-    font-weight: 600;
-    color: var(--accent);
+  .card-header h3 {
     margin: 0;
-    flex: 1;
+    font-size: 15px;
+    color: var(--accent);
   }
-
+  .card-summary {
+    margin: 6px 0 0;
+    font-size: 13px;
+    color: var(--muted);
+  }
   .chev {
+    margin-left: auto;
     font-size: 14px;
     color: var(--muted);
-    margin-left: 8px;
   }
-
-  details[open] .chev {
-    transform: rotate(90deg);
-  }
-
+  .card.open .chev { transform: rotate(90deg); }
   .answer {
+    display: none;
     margin-top: 8px;
     font-size: 13px;
     color: var(--text);
     line-height: 1.5;
   }
-
-  .answer p {
-    margin: 4px 0;
-  }
+  .answer p { margin: 4px 0; }
+  .card.open .answer { display: block; }
 
   .answer img {
-    width: 100%;
-    max-width: 520px;
-    border-radius: 10px;
-    margin: 10px 0;
-    box-shadow: 0 4px 16px rgba(0,0,0,0.25);
-    display: block;
-  }
-
-  @media (max-width: 600px) {
-    .page {
-      margin: 16px auto;
-    }
-  }
-</style>
-</head>
-<body>
-
-<div class="page">
-  <div class="header">
-    <h1>AXAPTA Invoice Processing – FAQ</h1>
-    <p>Quick reference for IM-OCR exports, posting errors, and invoice handling.</p>
-  </div>
-
-  <div class="faq-list">
-
-    <!-- Q1 with IMAGE -->
-    <details class="faq">
-      <summary>
-        <p class="q-title">
-          Where are validated invoices routed once they have been successfully exported from IM-OCR to AX?
-        </p>
-        <span class="chev">›</span>
-      </summary>
-      <div class="answer">
-        <p>Invoices that are successfully exported from IM-OCR will interface into AX through the following journals:</p>
-        <p>• Invoice Journal for non-PO invoices<br>
-           • Invoice Approval Journal for PO invoices</p>
-
-        <!-- Google Drive image -->
-        <img src="https://drive.google.com/uc?export=view&id=1Sz_7F74xmWccFIcenjUNsJUK9PcRURsb" alt="IM-OCR to AX routing screenshot">
-      </div>
-    </details>
-
-    <!-- Q2 -->
-    <details class="faq">
-      <summary>
-        <p class="q-title">
-          What should I do if I accidentally cancelled an invoice in the Invoice Approval Journal?
-        </p>
-        <span class="chev">›</span>
-      </summary>
-      <div class="answer">
-        <p>To restore the invoice:</p>
-        <p>1. Open the Invoice Approval Journal.<br>
-           2. Select the invoice cancelled.<br>
-           3. Click <strong>Lines</strong> then <strong>Remove voucher</strong>.<br>
-           4. Confirm by selecting <strong>Yes</strong>.<br>
-           5. Fetch voucher.<br>
-           6. Click <strong>Select</strong> then <strong>OK</strong> to complete the process.</p>
-      </div>
-    </details>
-
-    <!-- Q3 -->
-    <details class="faq">
-      <summary>
-        <p class="q-title">
-          What does the error message “Insufficient information / Intercompany posting missing / Update canceled” mean in AX?
-        </p>
-        <span class="chev">›</span>
-      </summary>
-      <div class="answer">
-        <p>This error appears when AX is unable to post an invoice due to missing or incorrect data in the voucher. The Infolog may show messages such as:</p>
-        <p>“Insufficient information in a line in voucher …” – Required fields (e.g., ledger account, offset account, or financial dimensions) are missing.</p>
-        <p>“Intercompany posting with th91 missing.” – The intercompany setup is incomplete or a required dimension value (e.g., th91) is not defined or mapped correctly.</p>
-        <p>“Journal has not been posted / Update has been canceled because of an error.” – AX stops the posting process because validation failed.</p>
-        <p>To resolve these errors, ensure all mandatory fields and dimensions are populated. Check intercompany account mappings and required dimensions for the referenced value and correct any missing or invalid data. If the issue persists, please seek assistance from the AX support team.</p>
-      </div>
-    </details>
-
-    <!-- Q4 -->
-    <details class="faq">
-      <summary>
-        <p class="q-title">
-          To whom should I coordinate if a “no budget” error occurs during invoice posting?
-        </p>
-        <span class="chev">›</span>
-      </summary>
-      <div class="answer">
-        <p>Coordinate with the Requestors or Marketing Coordinators so they can top up the budget. Once the budget has been updated, you can proceed to post the invoice.</p>
-      </div>
-    </details>
-
-    <!-- Q5 -->
-    <details class="faq">
-      <summary>
-        <p class="q-title">
-          How do I handle an invoice in AX when the invoice amount is higher than the PO GRN amount?
-        </p>
-        <span class="chev">›</span>
-      </summary>
-      <div class="answer">
-        <p>Ask the requestor to create an additional Purchase Order (PO) for the excess amount. Once the additional PO number is provided, follow these steps:</p>
-        <p>1. Go to the Invoice Approval Journal in AX.<br>
-           2. Select <strong>Functions → Purchase Order</strong>.<br>
-           3. Click the <strong>Select</strong> tab.<br>
-           4. Tick the additional PO number.<br>
-           5. Arrange the sequence as needed.<br>
-           You can now post the invoice successfully.</p>
-      </div>
-    </details>
-
-    <!-- Q6 -->
-    <details class="faq">
-      <summary>
-        <p class="q-title">
-          What does the error “Cannot create a record in Price (InventItemPrice). Item Number RBMENSYMVN006.” mean in AX?
-        </p>
-        <span class="chev">›</span>
-      </summary>
-      <div class="answer">
-        <p>This error indicates that AX is unable to create or update a price record for the specified item (RBMENSYMVN006) in the InventItemPrice table. Common causes include:</p>
-        <p>• The item number does not exist or is inactive in the system.<br>
-           • Required pricing setup (such as price groups or units of measure) is missing or incorrect.<br>
-           • Insufficient user permissions to create or modify price records.</p>
-        <p>To resolve this error, raise this to the AX support team as the finance team does not have sufficient access to investigate the item setup.</p>
-      </div>
-    </details>
-
-    <!-- Q7 -->
-    <details class="faq">
-      <summary>
-        <p class="q-title">
-          The ledger account tagged in the PO is incorrect; how can I correct it during invoice posting?
-        </p>
-        <span class="chev">›</span>
-      </summary>
-      <div class="answer">
-        <p>To correct the ledger account during invoice posting:</p>
-        <p>1. Go to the Invoice Approval Journal in AX.<br>
-           2. Click <strong>Lines</strong> and select the invoice to post.<br>
-           3. Navigate to the <strong>Information</strong> tab.<br>
-           4. For Opex accounts, enter the correct ledger account in the <strong>Ledger Account</strong> field.<br>
-           5. For A&amp;M, enter the correct ledger account in the <strong>Category</strong> field.</p>
-      </div>
-    </details>
-
-    <!-- Q8 -->
-    <details class="faq">
-      <summary>
-        <p class="q-title">
-          What should I do if the PO dimension does not match the project master in AX?
-        </p>
-        <span class="chev">›</span>
-      </summary>
-      <div class="answer">
-        <p>If the dimensions set in the PO do not match the project master, requestors should:</p>
-        <p>• Verify the project dimensions in the project master.<br>
-           • Update the PO line with the correct project or financial dimensions to match the project master.<br>
-           • Ensure that all required fields (Cost Center, Department, Project ID, etc.) are consistent.</p>
-        <p>If the mismatch persists, raise the issue to the AX support team for assistance, as correcting project dimension setups may require administrative access.</p>
-      </div>
-    </details>
-
-    <!-- Q9 -->
-    <details class="faq">
-      <summary>
-        <p class="q-title">
-          Where can I find an invoice exported from IM-OCR to AX if it does not appear in the Invoice Journal or Invoice Approval Journal?
-        </p>
-        <span class="chev">›</span>
-      </summary>
-      <div class="answer">
-        <p>If an invoice exported from IM-OCR does not appear in the Invoice Journal or Invoice Approval Journal, it may not have been successfully interfaced into AX. To locate it:</p>
-        <p>• Check the Invoice Processing Log in AX to see the current status of the invoice.<br>
-           – AP Invoice Processing Log – for Non-PO invoices<br>
-           – PO Invoice Processing Log – for PO invoices</p>
-        <p>• <strong>Created</strong> – The invoice has been generated but not yet posted.<br>
-           • <strong>Failed</strong> – There was an error during the interface process.</p>
-        <p>If the status shows <strong>Failed</strong>, identify the error details in the log and correct any missing or invalid information. Once the issue is resolved, the invoice can be re-processed.</p>
-        <p>If the invoice still cannot be found, contact the AX support team for assistance.</p>
-      </div>
-    </details>
-
-    <!-- Q10 -->
-    <details class="faq">
-      <summary>
-        <p class="q-title">
-          What should I do if the invoice cannot be posted in AX due to a closed period?
-        </p>
-        <span class="chev">›</span>
-      </summary>
-      <div class="answer">
-        <p>If the invoice cannot be posted because the period is closed:</p>
-        <p>1. Check the posting date used for the invoice in AX.<br>
-           2. Update the posting date to a date within an open period.<br>
-           3. Attempt to post the invoice again after updating the date.</p>
-      </div>
-    </details>
-
-    <!-- Q11 -->
-    <details class="faq">
-      <summary>
-        <p class="q-title">
-          How do I resolve the AX interface error “Line Item 1.00 – PO Number NPOXX-00XXX is invalid”?
-        </p>
-        <span class="chev">›</span>
-      </summary>
-      <div class="answer">
-        <p>This error appears when the PO number captured in IM-OCR does not match a valid PO in AX. To resolve it:</p>
-        <p>• Verify the PO number in the invoice and ensure it matches exactly with the PO created in AX.<br>
-           • Confirm that the PO exists in AX, is open, and has not been cancelled.</p>
-        <p>If the PO number is correct but still returns an “invalid” error, the issue may be due to incorrect PO setup or missing data in AX. In such cases, escalate the issue to the AX support team, as system-side corrections may be required.</p>
-        <p>To prevent this interface error in AX, the item number in IM-OCR has to be updated manually.</p>
-      </div>
-    </details>
-
-    <!-- Q12 -->
-    <details class="faq">
-      <summary>
-        <p class="q-title">
-          How do I resolve a dimension error such as “Business Line/PRIN-PROD combination failing financial dimension” in AX?
-        </p>
-        <span class="chev">›</span>
-      </summary>
-      <div class="answer">
-        <p>This error occurs when the financial dimensions used in the PO line do not match a valid or allowed dimension combination in AX. To resolve it:</p>
-        <p>1. Check the financial dimensions (e.g., Business Line, PRIN, Product, Cost Center) assigned to the line.<br>
-           2. Verify whether the dimension combination is valid based on the defined dimension rules.<br>
-           3. Update the dimension in the AX PO module with the correct combination.<br>
-           4. Re-process the invoice from the Invoice Processing Log.</p>
-      </div>
-    </details>
-
-    <!-- Q13 -->
-    <details class="faq">
-      <summary>
-        <p class="q-title">
-          How do I resolve the AX interface error “Material Number is invalid”?
-        </p>
-        <span class="chev">›</span>
-      </summary>
-      <div class="answer">
-        <p>To resolve this:</p>
-        <p>• Verify the material/item number on the invoice and ensure it is correctly encoded in IM-OCR.<br>
-           • Check if the item number exists and is active in AX.<br>
-           • If the material number should be valid but still returns an error, the item master setup may be incomplete.</p>
-        <p>During invoice validation, if you are unsure of the material number, leave the field blank to avoid this error.</p>
-        <p>As the Finance team does not have access to modify item master data, raise this issue to the AX support team for validation and correction.</p>
-      </div>
-    </details>
-
-  </div>
-</div>
-
-</body>
-</html>
+    width: 100%
