@@ -298,7 +298,27 @@ document.getElementById('search').addEventListener('input', function(){
   });
 });
 
-/* ------------------ DARK MODE ------------------ */
+/*/* ------------------ DARK MODE ------------------ */
+const darkToggle = document.getElementById('darkToggle');
+function applyDark(d){
+  if(d) document.body.classList.add('dark'); else document.body.classList.remove('dark');
+  darkToggle.textContent = d ? '☀️ Light Mode' : '🌙 Dark Mode';
+}
+applyDark(false);
+
+darkToggle.addEventListener('click',()=>{
+  const isDark = document.body.classList.toggle('dark');
+  darkToggle.textContent = isDark ? '☀️ Light Mode' : '🌙 Dark Mode';
+});
+
+/* ------------------ BACK TO TOP ------------------ */
+const topBtn = document.getElementById('topBtn');
+window.addEventListener('scroll',()=>{
+  topBtn.style.display = window.scrollY > 300 ? 'block' : 'none';
+});
+topBtn.onclick = ()=>window.scrollTo({top:0,behavior:'smooth'});
+
+</script> ------------------ */
 const darkToggle = document.getElementById('darkToggle');
 function applyDark(d){
   if(d) document.body.classList.add('dark'); else document.body
